@@ -5,38 +5,46 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.annotation.web.configurers.ExpressionUrlAuthorizationConfigurer;
-import org.springframework.security.config.annotation.web.configurers.FormLoginConfigurer;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 /**
  * 
- * WebSecurityConfigescription:
+ * Description:
  * <p>Company: xinya </p>
- * <p>Date:2018年7月5日 上午10:25:09</p>
+ * <p>Date:2018年7月5日 下午2:46:43</p>
  * @author Tony
  * @version 1.0
  *
  */
 @Configuration
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-	
+
 	@Bean
-	UserDetailsService systemUserDetailsService() {
+	public UserDetailsService systemUserDetailsService() {
 		return new SystemUserDetailsService();
 	}
 
+	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		((HttpSecurity) ((FormLoginConfigurer) ((HttpSecurity) ((ExpressionUrlAuthorizationConfigurer.AuthorizedUrl) ((ExpressionUrlAuthorizationConfigurer.AuthorizedUrl) http
-				.authorizeRequests().antMatchers(new String[] { "/css/**", "/index" })).permitAll()
-						.antMatchers(new String[] { "/user/**" })).hasRole("USER").and()).formLogin()
-								.loginPage("/login").failureUrl("/login-error")).and()).logout();
+		http
+			.authorizeRequests()
+			.antMatchers("/resources/**")
+			.permitAll()
+			.anyRequest()
+			.authenticated()
+			.and()
+			.formLogin()
+			.loginPage("/login")
+			.permitAll()
+			.and()
+			.logout()
+			.permitAll();
 	}
-
+	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		auth.userDetailsService(systemUserDetailsService());
+		auth.userDetailsService(systemUserDetailsService()).passwordEncoder(new BCryptPasswordEncoder());;
 	}
 
 	@Bean

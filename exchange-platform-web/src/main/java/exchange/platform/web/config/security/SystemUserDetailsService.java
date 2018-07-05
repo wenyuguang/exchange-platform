@@ -28,6 +28,10 @@ public class SystemUserDetailsService implements UserDetailsService {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		if( systemUser == null ){
+            throw new UsernameNotFoundException(String.format("User with username=%s was not found", username));
+        }
+		
 		User user = new User(username, systemUser.getPassword(),
 				AuthorityUtils.commaSeparatedStringToAuthorityList(systemUser.getRole()));
 
