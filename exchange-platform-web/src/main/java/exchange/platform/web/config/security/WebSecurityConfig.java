@@ -9,6 +9,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import exchange.platform.web.util.RoleUtil;
+
 /**
  * 
  * Description:
@@ -30,17 +32,24 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		http
 			.authorizeRequests()
+			.antMatchers("/user/**").access("hasRole('"+RoleUtil.USER+"')")
+			.antMatchers("/admin/**").access("hasRole('"+RoleUtil.ADMIN+"')")
 			.antMatchers("/resources/**")
 			.permitAll()
 			.anyRequest()
 			.authenticated()
 			.and()
 			.formLogin()
-			.loginPage("/login")
+			.and()
+				.formLogin()
+					.loginPage("/login")//.successHandler(customSuccessHandler)
+					.usernameParameter("username")
+					.passwordParameter("password")
 			.permitAll()
 			.and()
 			.logout()
 			.permitAll();
+			//.and().exceptionHandling().accessDeniedPage("/access_denied");
 	}
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {

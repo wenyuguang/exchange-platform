@@ -6,5 +6,6 @@
     </typeAliases>
     <mappers>
         <mapper resource="mybatis/mapper/UserMapper.xml"/>
+        <mapper resource="mybatis/mapper/PermissionMapper.xml"/>
     </mappers>
 </configuration>

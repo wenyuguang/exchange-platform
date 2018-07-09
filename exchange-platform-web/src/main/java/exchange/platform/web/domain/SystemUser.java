@@ -4,7 +4,6 @@ public class SystemUser {
 	private int id;
 	private String username;
 	private String password;
-	private String role;
 
 	public int getId() {
 		return this.id;
@@ -30,16 +29,4 @@ public class SystemUser {
 		this.password = password;
 	}
 
-	public String getRole() {
-		return this.role;
-	}
-
-	public void setRole(String role) {
-		this.role = role;
-	}
-
-	public String toString() {
-		return "SystemUser [id=" + this.id + ", username=" + this.username + ", password=" + this.password + ", role="
-				+ this.role + "]";
-	}
 }
