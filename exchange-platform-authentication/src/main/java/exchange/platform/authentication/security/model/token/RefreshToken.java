@@ -37,7 +37,8 @@ public class RefreshToken implements Token {
         Jws<Claims> claims = token.parseClaims(signingKey);
         @SuppressWarnings("unchecked")
         List<String> scopes = claims.getBody().get("scopes", List.class);
-        if (scopes == null || scopes.isEmpty()
+        if (scopes == null 
+        		|| scopes.isEmpty()
                 || scopes.stream().noneMatch(scope -> Scopes.REFRESH_TOKEN.authority().equals(scope))
                 ) {
             return Optional.empty();

@@ -8,10 +8,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationServiceException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -21,6 +23,7 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
 import exchange.platform.authentication.security.exceptions.AuthMethodNotSupportedException;
+import exchange.platform.common.auth.AuthUtil;
 
 
 /**
@@ -54,8 +57,20 @@ public class LoginProcessingFilter extends AbstractAuthenticationProcessingFilte
             }
             throw new AuthMethodNotSupportedException("Authentication method not supported");
         }
+      //Authorization:Basic base64(账号:密码)
+        String baseHeader = request.getHeader(AuthUtil.AUTHORIZATION)
+        		.replace(AuthUtil.AUTHORIZATION_BASIC_HEADER_PREFIX, "");
+        
+        String []credentials = null;
         String username = request.getParameter("username");
         String password = request.getParameter("password");
+        try {
+        	credentials = new String(Base64.decodeBase64(baseHeader),"UTF-8").split(":");
+        	username = credentials[0];
+        	password = credentials[1];
+        }catch(Exception e) {
+        	throw new BadCredentialsException("Basic Head information coding error");
+        }
         LoginRequest loginRequest = new LoginRequest(username, password);
         if (StringUtils.isBlank(loginRequest.getUsername()) || StringUtils.isBlank(loginRequest.getPassword())) {
             throw new AuthenticationServiceException("Username or Password not provided");

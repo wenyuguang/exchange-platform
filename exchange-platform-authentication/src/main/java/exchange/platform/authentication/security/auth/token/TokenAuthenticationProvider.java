@@ -34,13 +34,10 @@ import io.jsonwebtoken.Jws;
 @Component
 public class TokenAuthenticationProvider implements AuthenticationProvider {
 
-	private Logger logger = LoggerFactory.getLogger(TokenAuthenticationProvider.class);
-	private final TokenProperties tokenProperties;
-
+	private static Logger logger = LoggerFactory.getLogger(TokenAuthenticationProvider.class);
+	
 	@Autowired
-	public TokenAuthenticationProvider(TokenProperties tokenProperties) {
-		this.tokenProperties = tokenProperties;
-	}
+	private TokenProperties tokenProperties;
 
 	@Override
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {

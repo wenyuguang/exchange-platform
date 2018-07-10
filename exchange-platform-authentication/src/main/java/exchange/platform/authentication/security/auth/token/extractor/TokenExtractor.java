@@ -11,5 +11,6 @@ package exchange.platform.authentication.security.auth.token.extractor;
  *
  */
 public interface TokenExtractor {
-    String extract(String payload);
+	
+    public String extract(String payload);
 }

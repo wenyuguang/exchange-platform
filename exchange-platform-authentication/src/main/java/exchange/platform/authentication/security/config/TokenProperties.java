@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Configuration;
  *
  */
 @Configuration
-@ConfigurationProperties(prefix = "battcn.security.token")
+@ConfigurationProperties(prefix = "exchange.platform.token")
 public class TokenProperties {
     /**
      * {@link com.battcn.security.model.token.Token} token的过期时间

@@ -23,11 +23,12 @@ import exchange.platform.authentication.security.exceptions.InvalidTokenExceptio
 import exchange.platform.authentication.security.model.UserContext;
 import exchange.platform.authentication.security.model.token.RawAccessToken;
 import exchange.platform.authentication.security.model.token.RefreshToken;
-import exchange.platform.authentication.security.model.token.Token;
 import exchange.platform.authentication.security.model.token.TokenFactory;
 import exchange.platform.authentication.service.UserInfoService;
 import exchange.platform.authentication.service.UserRoleService;
 import exchange.platform.authentication.util.AuthUtil;
+import exchange.platform.common.code.ServiceResponse;
+import exchange.platform.common.http.HttpStatus;
 
 /**
  * 
@@ -74,15 +75,21 @@ public class AuthController {
      * @return
      */
     @GetMapping(AuthUtil.TOKEN_REFRESH_ENTRY_POINT)
-    public Token refreshToken(HttpServletRequest request) {
+    public Object refreshToken(HttpServletRequest request) {
         String tokenPayload = tokenExtractor.extract(request.getHeader(AuthUtil.TOKEN_HEADER_PARAM));
         RawAccessToken rawToken = new RawAccessToken(tokenPayload);
-        RefreshToken refreshToken = RefreshToken.create(rawToken, tokenProperties.getSigningKey()).orElseThrow(() -> new InvalidTokenException("Token验证失败"));
-
-        String jti = refreshToken.getJti();
-        if (!tokenVerifier.verify(jti)) {
-            throw new InvalidTokenException("Token验证失败");
-        }
+        RefreshToken refreshToken = null;
+        try {
+        	refreshToken = RefreshToken.create(rawToken, tokenProperties.getSigningKey()).orElseThrow(() -> new InvalidTokenException("Token验证失败"));
+        	
+        	String jti = refreshToken.getJti();
+        	if (!tokenVerifier.verify(jti)) {
+        		throw new InvalidTokenException("Token验证失败");
+        	}
+        	
+        }catch (Exception e) {
+			return new ServiceResponse(HttpStatus.BAD_REQUEST.value(), "Token Verification Failure");
+		}
 
         String subject = refreshToken.getSubject();
         UserInfo user = Optional.ofNullable(userInfoService.findUserByUserName(subject)).orElseThrow(() -> new UsernameNotFoundException("用户未找到: " + subject));

@@ -32,12 +32,8 @@ import io.jsonwebtoken.SignatureAlgorithm;
 @Component
 public class TokenFactory {
 
-    private final TokenProperties properties;
-
-    @Autowired
-    public TokenFactory(TokenProperties properties) {
-        this.properties = properties;
-    }
+	@Autowired
+    private TokenProperties properties;
 
     /**
      * 利用JJWT 生成 Token
