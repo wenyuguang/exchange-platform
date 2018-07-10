@@ -60,15 +60,9 @@ public class RateLimitZuulFilter extends ZuulFilter {
 							new Gson()
 								.toJson(
 										new ServiceResponse(
-												System.currentTimeMillis(), 
 												httpStatus.value(), 
 												httpStatus.getReasonPhrase())));
 				currentContext.setSendZuulResponse(false);
-//				throw new ZuulException(
-//						httpStatus.getReasonPhrase(),
-//						httpStatus.value(),
-//						httpStatus.getReasonPhrase()
-//				);
 			}
 		} catch (Exception e) {
 			logger.error(e.toString());
