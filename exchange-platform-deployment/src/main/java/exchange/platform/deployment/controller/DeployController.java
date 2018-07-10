@@ -1,8 +1,13 @@
 package exchange.platform.deployment.controller;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.google.gson.Gson;
 
@@ -14,28 +19,30 @@ public class DeployController {
 	@Autowired
 	private DeployService deployservice;
 	
-	@RequestMapping("start")
-	public String start (String serviceName) {
+	@GetMapping("start")
+	public String start (@RequestParam("serviceName")String serviceName) {
 		return new Gson().toJson(deployservice.start(serviceName));
 	}
 	
-	@RequestMapping("restart")
-	public String reStart (String serviceName) {
+	@GetMapping("restart")
+	public String reStart (@RequestParam("serviceName")String serviceName) {
 		return new Gson().toJson(deployservice.reStart(serviceName));
 	}
 	
-	@RequestMapping("stop")
-	public String stop (String serviceName) {
+	@GetMapping("stop")
+	public String stop (@RequestParam("serviceName")String serviceName) {
 		return new Gson().toJson(deployservice.stop(serviceName));
 	}
 	
-	@RequestMapping("deploy")
-	public String deploy (String serviceName) {
-		return new Gson().toJson(deployservice.deploy(serviceName));
+	@PostMapping("deploy")
+	public String deploy (@RequestParam("file") MultipartFile file,
+			@RequestParam("serviceName")String serviceName,
+            HttpServletRequest request) {
+		return new Gson().toJson(deployservice.deploy(file, request, serviceName));
 	}
 	
-	@RequestMapping("check")
-	public String check (String serviceName) {
+	@GetMapping("check")
+	public String check (@RequestParam("serviceName")String serviceName) {
 		return new Gson().toJson(deployservice.check(serviceName));
 	}
 }
