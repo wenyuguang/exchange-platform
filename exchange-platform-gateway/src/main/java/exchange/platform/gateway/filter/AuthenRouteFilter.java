@@ -91,7 +91,6 @@ public class AuthenRouteFilter extends ZuulFilter {
 				ctx.setResponseBody(new Gson()
 						.toJson(
 								new ServiceResponse(
-										System.currentTimeMillis(), 
 										HttpStatus.UNAUTHORIZED
 											.value(), 
 										HttpStatus.UNAUTHORIZED
