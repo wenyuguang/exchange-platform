@@ -58,7 +58,7 @@ public class LoginAuthenticationProvider implements AuthenticationProvider {
         if(user == null) throw new UsernameNotFoundException("User not found: " + username);
         
 //        if (!StringUtils.equals(password, user.getPassword())) {
-        if(encoder.matches(password, user.getPassword())) {
+        if(!encoder.matches(password, user.getPassword())) {
             throw new BadCredentialsException("Authentication Failed. Username or Password not valid.");
         }
         List<UserRole> roles = roleService.getRoleByUser(user);

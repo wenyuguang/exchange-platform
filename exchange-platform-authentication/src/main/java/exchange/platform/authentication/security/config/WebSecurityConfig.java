@@ -25,7 +25,7 @@ import exchange.platform.authentication.security.auth.token.SkipPathRequestMatch
 import exchange.platform.authentication.security.auth.token.TokenAuthenticationProcessingFilter;
 import exchange.platform.authentication.security.auth.token.TokenAuthenticationProvider;
 import exchange.platform.authentication.security.auth.token.extractor.TokenExtractor;
-import exchange.platform.authentication.util.AuthUtil;
+import exchange.platform.authentication.util.UriUtil;
 
 /**
  * 
@@ -60,14 +60,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private TokenExtractor               tokenExtractor;
 
     private LoginProcessingFilter buildLoginProcessingFilter() throws Exception {
-        LoginProcessingFilter filter = new LoginProcessingFilter(AuthUtil.FORM_BASED_LOGIN_ENTRY_POINT, successHandler, failureHandler);
+        LoginProcessingFilter filter = new LoginProcessingFilter(UriUtil.FORM_BASED_LOGIN_ENTRY_POINT, successHandler, failureHandler);
         filter.setAuthenticationManager(super.authenticationManager());
         return filter;
     }
 
     private TokenAuthenticationProcessingFilter buildTokenAuthenticationProcessingFilter() throws Exception {
 //        List<String> list = Lists.newArrayList(TOKEN_BASED_AUTH_ENTRY_POINT, MANAGE_TOKEN_BASED_AUTH_ENTRY_POINT);
-    	List<String> list = Lists.newArrayList(AuthUtil.TOKEN_BASED_AUTH_ENTRY_POINT);
+    	List<String> list = Lists.newArrayList(UriUtil.TOKEN_BASED_AUTH_ENTRY_POINT);
         SkipPathRequestMatcher matcher = new SkipPathRequestMatcher(list);
         TokenAuthenticationProcessingFilter filter = new TokenAuthenticationProcessingFilter(failureHandler, tokenExtractor, matcher);
         filter.setAuthenticationManager(super.authenticationManager());
@@ -97,11 +97,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers(AuthUtil.FORM_BASED_LOGIN_ENTRY_POINT).permitAll() // Login end-point
-                .antMatchers(AuthUtil.TOKEN_REFRESH_ENTRY_POINT).permitAll() // Token refresh end-point
+                .antMatchers(UriUtil.FORM_BASED_LOGIN_ENTRY_POINT).permitAll() // Login end-point
+                .antMatchers(UriUtil.TOKEN_REFRESH_ENTRY_POINT).permitAll() // Token refresh end-point
                 .and()
                 .authorizeRequests()
-                .antMatchers(AuthUtil.TOKEN_BASED_AUTH_ENTRY_POINT).authenticated() // Protected API End-points
+                .antMatchers(UriUtil.TOKEN_BASED_AUTH_ENTRY_POINT).authenticated() // Protected API End-points
 //                .antMatchers(MANAGE_TOKEN_BASED_AUTH_ENTRY_POINT).hasAnyRole(RoleEnum.ADMIN.desc())
                 .and()
                 .addFilterBefore(buildLoginProcessingFilter(), UsernamePasswordAuthenticationFilter.class)

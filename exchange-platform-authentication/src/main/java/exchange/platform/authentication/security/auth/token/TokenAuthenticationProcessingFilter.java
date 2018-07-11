@@ -7,7 +7,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContext;
@@ -19,7 +18,7 @@ import org.springframework.security.web.util.matcher.RequestMatcher;
 import exchange.platform.authentication.security.auth.AuthenticationToken;
 import exchange.platform.authentication.security.auth.token.extractor.TokenExtractor;
 import exchange.platform.authentication.security.model.token.RawAccessToken;
-import exchange.platform.authentication.util.AuthUtil;
+import exchange.platform.authentication.util.UriUtil;
 
 
 
@@ -37,7 +36,6 @@ public class TokenAuthenticationProcessingFilter extends AbstractAuthenticationP
 	private final AuthenticationFailureHandler failureHandler;
     private final TokenExtractor tokenExtractor;
     
-//    @Autowired
     public TokenAuthenticationProcessingFilter(AuthenticationFailureHandler failureHandler, 
             TokenExtractor tokenExtractor, RequestMatcher matcher) {
         super(matcher);
@@ -48,9 +46,14 @@ public class TokenAuthenticationProcessingFilter extends AbstractAuthenticationP
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
             throws AuthenticationException, IOException, ServletException {
-        String tokenPayload = request.getHeader(AuthUtil.TOKEN_HEADER_PARAM);
-        RawAccessToken token = new RawAccessToken(tokenExtractor.extract(tokenPayload));
-        return getAuthenticationManager().authenticate(new AuthenticationToken(token));
+//        String tokenPayload = request.getHeader(AuthUtil.TOKEN_HEADER_PARAM);
+//        RawAccessToken token = new RawAccessToken(tokenExtractor.extract(request.getHeader(AuthUtil.TOKEN_HEADER_PARAM)));
+        return getAuthenticationManager()
+        		.authenticate(
+        				new AuthenticationToken(
+        						new RawAccessToken(
+        								tokenExtractor.extract(
+        										request.getHeader(UriUtil.TOKEN_HEADER_PARAM)))));
     }
 
     @Override

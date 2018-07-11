@@ -1,8 +1,13 @@
 package exchange.platform.authentication.enums;
 
 /**
- * @author Levin
- * @date 2017-08-15.
+ * 
+ * Description:
+ * <p>Company: xinya </p>
+ * <p>Date:2018年7月11日 上午11:56:34</p>
+ * @author Tony
+ * @version 1.0
+ *
  */
 public enum RoleEnum {
     ADMIN("ADMIN"),

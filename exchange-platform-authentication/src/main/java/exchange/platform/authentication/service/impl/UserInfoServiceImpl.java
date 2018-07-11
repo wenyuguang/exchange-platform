@@ -7,6 +7,15 @@ import exchange.platform.authentication.domain.UserInfo;
 import exchange.platform.authentication.mapper.UserInfoMapper;
 import exchange.platform.authentication.service.UserInfoService;
 
+/**
+ * 
+ * Description:
+ * <p>Company: xinya </p>
+ * <p>Date:2018年7月11日 上午11:57:54</p>
+ * @author Tony
+ * @version 1.0
+ *
+ */
 @Service
 public class UserInfoServiceImpl implements UserInfoService{
 

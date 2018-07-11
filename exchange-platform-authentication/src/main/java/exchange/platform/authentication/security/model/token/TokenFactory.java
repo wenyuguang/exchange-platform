@@ -32,12 +32,8 @@ import io.jsonwebtoken.SignatureAlgorithm;
 @Component
 public class TokenFactory {
 
-    private final TokenProperties properties;
-
-    @Autowired
-    public TokenFactory(TokenProperties properties) {
-        this.properties = properties;
-    }
+	@Autowired
+    private TokenProperties properties;
 
     /**
      * 利用JJWT 生成 Token
@@ -52,14 +48,14 @@ public class TokenFactory {
         claims.put("scopes", context.getAuthorities().stream().map(Object::toString).collect(toList()));
         LocalDateTime currentTime = LocalDateTime.now();
         String token = Jwts.builder()
-                .setClaims(claims)
-                .setIssuer(properties.getIssuer())
-                .setIssuedAt(Date.from(currentTime.atZone(ZoneId.systemDefault()).toInstant()))
-                .setExpiration(Date.from(currentTime
-                        .plusMinutes(properties.getExpirationTime())
-                        .atZone(ZoneId.systemDefault()).toInstant()))
-                .signWith(SignatureAlgorithm.HS512, properties.getSigningKey())
-                .compact();
+					.setClaims(claims)
+			        .setIssuer(properties.getIssuer())
+			        .setIssuedAt(Date.from(currentTime.atZone(ZoneId.systemDefault()).toInstant()))
+			        .setExpiration(Date.from(currentTime
+			                .plusMinutes(properties.getExpirationTime())
+			                .atZone(ZoneId.systemDefault()).toInstant()))
+			        .signWith(SignatureAlgorithm.HS512, properties.getSigningKey())
+			        .compact();
         return new AccessToken(token, claims);
     }
 
@@ -78,8 +74,8 @@ public class TokenFactory {
         claims.put("scopes", Collections.singletonList(Scopes.REFRESH_TOKEN.authority()));
         String token = Jwts.builder()
                 .setClaims(claims)
-                .setIssuer(properties.getIssuer())
                 .setId(UUID.randomUUID().toString())
+                .setIssuer(properties.getIssuer())
                 .setIssuedAt(Date.from(currentTime.atZone(ZoneId.systemDefault()).toInstant()))
                 .setExpiration(Date.from(currentTime
                         .plusMinutes(properties.getRefreshExpTime())
