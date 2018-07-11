@@ -38,6 +38,17 @@ public class InternalServiceResponse implements Serializable{
 		this.timestamp = timestamp;
 	}
 	/**
+	 * 
+	 * @param code true 为正常。 false为错误
+	 * @param message 消息
+	 */
+	public InternalServiceResponse(boolean code, String message) {
+		super();
+		this.code = code;
+		this.message = message;
+		this.timestamp = System.currentTimeMillis();
+	}
+	/**
 	 * @return the code
 	 */
 	public boolean isCode() {
