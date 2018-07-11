@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 import exchange.platform.authentication.domain.UserInfo;
 import exchange.platform.authentication.domain.UserRole;
 import exchange.platform.authentication.security.auth.token.extractor.TokenExtractor;
-import exchange.platform.authentication.security.auth.token.verifier.TokenVerifier;
 import exchange.platform.authentication.security.config.TokenProperties;
 import exchange.platform.authentication.security.exceptions.InvalidTokenException;
 import exchange.platform.authentication.security.model.UserContext;
@@ -26,7 +25,7 @@ import exchange.platform.authentication.security.model.token.RefreshToken;
 import exchange.platform.authentication.security.model.token.TokenFactory;
 import exchange.platform.authentication.service.UserInfoService;
 import exchange.platform.authentication.service.UserRoleService;
-import exchange.platform.authentication.util.AuthUtil;
+import exchange.platform.authentication.util.UriUtil;
 import exchange.platform.common.code.ServiceResponse;
 import exchange.platform.common.http.HttpStatus;
 
@@ -44,8 +43,6 @@ public class AuthController {
 
 	@Autowired
     private TokenProperties tokenProperties;
-	@Autowired
-    private TokenVerifier tokenVerifier;
     @Autowired
     private TokenFactory tokenFactory;
     @Autowired
@@ -74,19 +71,13 @@ public class AuthController {
      * @param request
      * @return
      */
-    @GetMapping(AuthUtil.TOKEN_REFRESH_ENTRY_POINT)
+    @GetMapping(UriUtil.TOKEN_REFRESH_ENTRY_POINT)
     public Object refreshToken(HttpServletRequest request) {
-        String tokenPayload = tokenExtractor.extract(request.getHeader(AuthUtil.TOKEN_HEADER_PARAM));
+        String tokenPayload = tokenExtractor.extract(request.getHeader(UriUtil.TOKEN_HEADER_PARAM));
         RawAccessToken rawToken = new RawAccessToken(tokenPayload);
         RefreshToken refreshToken = null;
         try {
         	refreshToken = RefreshToken.create(rawToken, tokenProperties.getSigningKey()).orElseThrow(() -> new InvalidTokenException("Token验证失败"));
-        	
-        	String jti = refreshToken.getJti();
-        	if (!tokenVerifier.verify(jti)) {
-        		throw new InvalidTokenException("Token验证失败");
-        	}
-        	
         }catch (Exception e) {
 			return new ServiceResponse(HttpStatus.BAD_REQUEST.value(), "Token Verification Failure");
 		}

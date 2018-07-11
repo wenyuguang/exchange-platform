@@ -47,7 +47,7 @@ public class AwareAuthenticationFailureHandler implements AuthenticationFailureH
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 
         if (e instanceof BadCredentialsException) {
-            mapper.writeValue(response.getWriter(), new ServiceResponse(HttpStatus.UNAUTHORIZED.value(), "Invalid username or password"));
+            mapper.writeValue(response.getWriter(), new ServiceResponse(HttpStatus.UNAUTHORIZED.value(), e.toString()));
         } else if (e instanceof ExpiredTokenException) {
             mapper.writeValue(response.getWriter(), new ServiceResponse(HttpStatus.UNAUTHORIZED.value(), "Token has expired"));
         } else if (e instanceof AuthMethodNotSupportedException) {

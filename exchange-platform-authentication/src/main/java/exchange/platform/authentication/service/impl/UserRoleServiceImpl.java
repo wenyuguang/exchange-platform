@@ -10,6 +10,15 @@ import exchange.platform.authentication.domain.UserInfo;
 import exchange.platform.authentication.domain.UserRole;
 import exchange.platform.authentication.service.UserRoleService;
 
+/**
+ * 
+ * Description:
+ * <p>Company: xinya </p>
+ * <p>Date:2018年7月11日 上午11:57:59</p>
+ * @author Tony
+ * @version 1.0
+ *
+ */
 @Service
 public class UserRoleServiceImpl implements UserRoleService{
 
