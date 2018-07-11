@@ -16,5 +16,5 @@ public interface Token {
      *
      * @return Token
      */
-    String getToken();
+    public String getToken();
 }

@@ -1,33 +1,16 @@
 package exchange.platform.authentication.contorller;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.InsufficientAuthenticationException;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import exchange.platform.authentication.domain.UserInfo;
-import exchange.platform.authentication.domain.UserRole;
-import exchange.platform.authentication.security.auth.token.extractor.TokenExtractor;
-import exchange.platform.authentication.security.config.TokenProperties;
-import exchange.platform.authentication.security.exceptions.InvalidTokenException;
-import exchange.platform.authentication.security.model.UserContext;
-import exchange.platform.authentication.security.model.token.RawAccessToken;
-import exchange.platform.authentication.security.model.token.RefreshToken;
-import exchange.platform.authentication.security.model.token.TokenFactory;
-import exchange.platform.authentication.service.UserInfoService;
-import exchange.platform.authentication.service.UserRoleService;
-import exchange.platform.authentication.util.UriUtil;
-import exchange.platform.common.code.ServiceResponse;
-import exchange.platform.common.http.HttpStatus;
+import exchange.platform.authentication.service.AuthService;
+import exchange.platform.authentication.util.RequestUtils;
 
 /**
  * 
@@ -38,19 +21,11 @@ import exchange.platform.common.http.HttpStatus;
  * @version 1.0
  *
  */
-@RestController
+@Controller
 public class AuthController {
 
-	@Autowired
-    private TokenProperties tokenProperties;
     @Autowired
-    private TokenFactory tokenFactory;
-    @Autowired
-    private TokenExtractor tokenExtractor;
-    @Autowired
-    private UserInfoService userInfoService;
-    @Autowired
-    private UserRoleService userRoleService;
+    private AuthService     authService;
 
 
     @GetMapping("/test1")
@@ -71,27 +46,34 @@ public class AuthController {
      * @param request
      * @return
      */
-    @GetMapping(UriUtil.TOKEN_REFRESH_ENTRY_POINT)
+    @GetMapping(RequestUtils.TOKEN_REFRESH_ENTRY_POINT)
+    @ResponseBody
     public Object refreshToken(HttpServletRequest request) {
-        String tokenPayload = tokenExtractor.extract(request.getHeader(UriUtil.TOKEN_HEADER_PARAM));
-        RawAccessToken rawToken = new RawAccessToken(tokenPayload);
-        RefreshToken refreshToken = null;
-        try {
-        	refreshToken = RefreshToken.create(rawToken, tokenProperties.getSigningKey()).orElseThrow(() -> new InvalidTokenException("Token验证失败"));
-        }catch (Exception e) {
-			return new ServiceResponse(HttpStatus.BAD_REQUEST.value(), "Token Verification Failure");
-		}
-
-        String subject = refreshToken.getSubject();
-        UserInfo user = Optional.ofNullable(userInfoService.findUserByUserName(subject)).orElseThrow(() -> new UsernameNotFoundException("用户未找到: " + subject));
-        List<UserRole> roles = Optional.ofNullable(userRoleService.getRoleByUser(user)).orElseThrow(() -> new InsufficientAuthenticationException("用户没有分配角色"));
-        List<GrantedAuthority> authorities = roles.stream()
-                .map(authority -> new SimpleGrantedAuthority(authority.authority()))
-                .collect(Collectors.toList());
-
-        UserContext userContext = UserContext.create(user.getUserName(), authorities);
-        return tokenFactory.createAccessToken(userContext);
+    	return authService.refreshToken(request);
     }
-
-
+    /**
+     * 
+     * @function "/auth/verify"
+     * @author Tony
+     * @creaetime 2018年7月11日21:45:54
+     * @param request
+     * @return
+     */
+    @GetMapping(RequestUtils.TOKEN_VERIFY_ENTRY_POINT)
+    @ResponseBody
+    public boolean verify(@RequestParam("token")String tokens) {
+    	return authService.verify(tokens);
+    }
+    /**
+     * 
+     * @function "/login"
+     * @author Tony
+     * @creaetime 2018年7月11日22:48:52
+     * @param request
+     * @return
+     */
+    @PostMapping(RequestUtils.TOKEN_BASED_LOGIN_ENTRY_POINT)
+    public Object login() {
+    	return "forward:/auth/login";
+    }
 }

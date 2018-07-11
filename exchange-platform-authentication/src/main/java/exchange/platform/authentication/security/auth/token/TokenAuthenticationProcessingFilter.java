@@ -18,7 +18,7 @@ import org.springframework.security.web.util.matcher.RequestMatcher;
 import exchange.platform.authentication.security.auth.AuthenticationToken;
 import exchange.platform.authentication.security.auth.token.extractor.TokenExtractor;
 import exchange.platform.authentication.security.model.token.RawAccessToken;
-import exchange.platform.authentication.util.UriUtil;
+import exchange.platform.authentication.util.RequestUtils;
 
 
 
@@ -53,7 +53,7 @@ public class TokenAuthenticationProcessingFilter extends AbstractAuthenticationP
         				new AuthenticationToken(
         						new RawAccessToken(
         								tokenExtractor.extract(
-        										request.getHeader(UriUtil.TOKEN_HEADER_PARAM)))));
+        										request.getHeader(RequestUtils.TOKEN_HEADER_PARAM)))));
     }
 
     @Override
