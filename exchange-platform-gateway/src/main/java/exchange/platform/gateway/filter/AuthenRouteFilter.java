@@ -23,7 +23,7 @@ import exchange.platform.common.http.HttpStatus;
 import exchange.platform.common.net.NetUtils;
 import exchange.platform.common.redis.RedisUtil;
 import exchange.platform.gateway.domain.ServiceInfo;
-import exchange.platform.gateway.service.AuthenticationService;
+import exchange.platform.gateway.service.AuthService;
 
 /**
  * 鉴权和路由管理
@@ -36,7 +36,7 @@ public class AuthenRouteFilter extends ZuulFilter {
 	private static Logger logger = LoggerFactory.getLogger(AuthenRouteFilter.class);
 	
 	@Autowired
-	private AuthenticationService authenticationService;
+	private AuthService                   authService;
 	@Autowired
 	private RedisTemplate<Object, Object> redisTemplate;
 
@@ -77,6 +77,11 @@ public class AuthenRouteFilter extends ZuulFilter {
 			if(redisTemplate.hasKey(String.format(RedisUtil.SERVICE_INFO_PREFIX, serviceEnName))) {
 				serviceInfo = (ServiceInfo) valueOperations.get(String.format(RedisUtil.SERVICE_INFO_PREFIX, serviceEnName));
 			}
+			if(authorizationHead.startsWith(AuthUtil.AUTHORIZATION_BASIC_HEADER_PREFIX)) {
+				//Basic认证模式，放过请求自行认证
+				return null;
+			}
+			//除开登录认证其余所有请求都需要经过jwt鉴权，通过才能放过请求。
 			//网关只做token串校验，获取token串走另外获取接口
 			if(!redisTemplate.hasKey(String.format(RedisUtil.SERVICE_INFO_PREFIX, serviceEnName))
 					|| StringUtils.isEmpty(serviceInfo)
@@ -84,7 +89,7 @@ public class AuthenRouteFilter extends ZuulFilter {
 					|| !serviceInfo.getAccessIp().contains(requestIp)
 					|| StringUtils.isEmpty(authorizationHead) 
 					|| !authorizationHead.startsWith(AuthUtil.AUTHORIZATION_JWT_HEADER_PREFIX)
-					|| !authenticationService.authenticateToken(authorizationHead)) {
+					|| !authService.verify(authorizationHead.replace(AuthUtil.AUTHORIZATION_JWT_HEADER_PREFIX, ""))) {
 				invoke = false;
 				ctx.setSendZuulResponse(false);
 				ctx.setResponseStatusCode(401);
