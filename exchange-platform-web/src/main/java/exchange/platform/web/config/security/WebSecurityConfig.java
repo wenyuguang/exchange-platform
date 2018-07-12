@@ -34,7 +34,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			.authorizeRequests()
 			.antMatchers("/user/**").access("hasRole('"+RoleUtil.USER+"')")
 			.antMatchers("/admin/**").access("hasRole('"+RoleUtil.ADMIN+"')")
-			.antMatchers("/resources/**")
+			.antMatchers("/resources/**","/assets/**","/assets/css/**","/assets/js/**","/layui/**","/js/**","/vendor/avalon/**","/vendor/oniui/mmRouter/**",
+					"/pages/search/**","vendor/datatables/**","vendor/layui/**")
 			.permitAll()
 			.anyRequest()
 			.authenticated()
@@ -45,6 +46,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 					.loginPage("/login")//.successHandler(customSuccessHandler)
 					.usernameParameter("username")
 					.passwordParameter("password")
+					.successForwardUrl("/admin")
 			.permitAll()
 			.and()
 			.logout()

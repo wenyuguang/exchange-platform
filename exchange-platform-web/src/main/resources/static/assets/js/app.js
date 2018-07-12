@@ -46,7 +46,7 @@ function autoLeftNav() {
 
 
 // 侧边菜单
-$('.sidebar-nav-sub-title').on('click', function() {
+$('.sidebar-nav').on('click','.sidebar-nav-sub-title',function() {
     $(this).siblings('.sidebar-nav-sub').slideToggle(80)
         .end()
         .find('.sidebar-nav-sub-ico').toggleClass('sidebar-nav-sub-ico-rotate');

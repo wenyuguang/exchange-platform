@@ -1,0 +1,22 @@
+.theme-white .tpl-search-box {
+  background: #fff;
+  border-radius: 4px;
+  padding: 20px;
+  text-align:center
+}
+.theme-white .tpl-search-box .slsj{
+	padding-top:10px;
+	padding-left:5px;
+	padding-right:5px;
+	padding-bottom:38px;
+	/* border-style: solid;
+	border-color: #96a2b4; */
+	color: #96a2b4;
+}
+.search-table{
+	width:948px;
+	border-spacing:0;
+	border-collapse:separate;
+	margin:auto;
+	text-align: left;
+}

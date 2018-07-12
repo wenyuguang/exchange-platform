@@ -25,7 +25,7 @@ public class MainController {
 	public String login() {
 		return "login";
 	}
-
+	
 	@RequestMapping({ "/login-error" })
 	public String loginError(Model model) {
 		model.addAttribute("loginError", Boolean.valueOf(true));
@@ -36,4 +36,9 @@ public class MainController {
 	public String logout() {
 		return "logout";
 	}
+	@RequestMapping({ "/admin" })
+	public String admin() {
+		return "admin";
+	}
+	
 }
