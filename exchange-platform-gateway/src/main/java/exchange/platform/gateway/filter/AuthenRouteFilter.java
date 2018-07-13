@@ -77,12 +77,29 @@ public class AuthenRouteFilter extends ZuulFilter {
 			if(redisTemplate.hasKey(String.format(RedisUtil.SERVICE_INFO_PREFIX, serviceEnName))) {
 				serviceInfo = (ServiceInfo) valueOperations.get(String.format(RedisUtil.SERVICE_INFO_PREFIX, serviceEnName));
 			}
+			if(StringUtils.isEmpty(authorizationHead)) {
+				ctx.setSendZuulResponse(false);
+				ctx.setResponseStatusCode(401);
+				ctx.setResponseBody(new Gson()
+						.toJson(
+								new ServiceResponse(
+										HttpStatus.UNAUTHORIZED
+											.value(), 
+										HttpStatus.UNAUTHORIZED
+											.getReasonPhrase())));
+				return null;
+			}else {
+				//解决zuul token传递问题
+				
+			}
 			if(authorizationHead.startsWith(AuthUtil.AUTHORIZATION_BASIC_HEADER_PREFIX)) {
 				//Basic认证模式，放过请求自行认证
+				ctx.addZuulRequestHeader(AuthUtil.AUTHORIZATION, authorizationHead);
 				return null;
 			}
 			//除开登录认证其余所有请求都需要经过jwt鉴权，通过才能放过请求。
 			//网关只做token串校验，获取token串走另外获取接口
+			
 			if(!redisTemplate.hasKey(String.format(RedisUtil.SERVICE_INFO_PREFIX, serviceEnName))
 					|| StringUtils.isEmpty(serviceInfo)
 					|| serviceInfo.getEnableStatus().equalsIgnoreCase(ServiceStatus.DISABLE)
@@ -102,6 +119,7 @@ public class AuthenRouteFilter extends ZuulFilter {
 											.getReasonPhrase())));
 				return null;
 			}
+			ctx.addZuulRequestHeader(AuthUtil.AUTHORIZATION, authorizationHead);
 			return null;
 		} catch (Exception e) {
 			invoke = false;

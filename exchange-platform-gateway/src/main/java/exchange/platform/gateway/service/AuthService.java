@@ -25,7 +25,7 @@ import feign.hystrix.FallbackFactory;
  * @version 1.0
  *
  */
-@FeignClient(value="service-authentication", fallback = AuthServiceHystrix.class)
+@FeignClient(value="service-authen", fallback = AuthServiceHystrix.class)
 public interface AuthService {
 	
 	@GetMapping(RequestUtils.TOKEN_REFRESH_ENTRY_POINT)

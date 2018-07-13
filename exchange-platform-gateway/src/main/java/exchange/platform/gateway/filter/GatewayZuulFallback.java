@@ -12,8 +12,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.stereotype.Component;
 
-import com.netflix.hystrix.exception.HystrixTimeoutException;
-
 /**
  * 路由失败回退
  * @author min
@@ -64,7 +62,7 @@ public class GatewayZuulFallback implements FallbackProvider {
 
 	@Override
 	public ClientHttpResponse fallbackResponse(Throwable cause) {
-		if (cause instanceof HystrixTimeoutException) {
+		if (cause.getCause().getMessage().contains("Read timed out")) {
 			return response(HttpStatus.GATEWAY_TIMEOUT);
 		} else {
 			return this.fallbackResponse();
