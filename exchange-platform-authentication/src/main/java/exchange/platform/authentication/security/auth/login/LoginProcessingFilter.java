@@ -57,15 +57,14 @@ public class LoginProcessingFilter extends AbstractAuthenticationProcessingFilte
             }
             throw new AuthMethodNotSupportedException("Authentication method not supported");
         }
-      //Authorization:Basic base64(账号:密码)
-        String baseHeader = request.getHeader(AuthUtil.AUTHORIZATION)
-        		.replace(AuthUtil.AUTHORIZATION_BASIC_HEADER_PREFIX, "");
-        
-        String []credentials = null;
-        String username = request.getParameter("username");
-        String password = request.getParameter("password");
+        String username = null;
+        String password = null;
         try {
-        	credentials = new String(Base64.decodeBase64(baseHeader),"UTF-8").split(":");
+        	//Authorization:Basic base64(账号:密码)
+        	String baseHeader = request.getHeader(AuthUtil.AUTHORIZATION)
+        			.replace(AuthUtil.AUTHORIZATION_BASIC_HEADER_PREFIX, "");
+        
+        	String [] credentials = new String(Base64.decodeBase64(baseHeader),"UTF-8").split(":");
         	username = credentials[0];
         	password = credentials[1];
         }catch(Exception e) {
