@@ -6,6 +6,6 @@ public interface AuthService {
 
 	public Object refreshToken(HttpServletRequest request);
 
-	public boolean verify(String tokens);
+	public boolean verify(String tokens, String serviceEnName);
 
 }

@@ -18,7 +18,7 @@ import org.springframework.security.web.util.matcher.RequestMatcher;
 import exchange.platform.authentication.security.auth.AuthenticationToken;
 import exchange.platform.authentication.security.auth.token.extractor.TokenExtractor;
 import exchange.platform.authentication.security.model.token.RawAccessToken;
-import exchange.platform.authentication.util.RequestUtils;
+import exchange.platform.common.auth.RequestUtils;
 
 
 

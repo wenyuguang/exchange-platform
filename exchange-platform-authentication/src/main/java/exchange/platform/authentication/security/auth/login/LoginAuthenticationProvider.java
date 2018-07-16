@@ -26,6 +26,7 @@ import exchange.platform.authentication.domain.UserRole;
 import exchange.platform.authentication.security.model.UserContext;
 import exchange.platform.authentication.service.UserInfoService;
 import exchange.platform.authentication.service.UserRoleService;
+import exchange.platform.common.auth.AuthUtil;
 
 
 /**
@@ -52,9 +53,12 @@ public class LoginAuthenticationProvider implements AuthenticationProvider {
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         Assert.notNull(authentication, "No authentication data provided");
         logger.debug("[authentication info] - [{}]", JSON.toJSONString(authentication));
-        String username = (String) authentication.getPrincipal();
+        String userInfo = (String) authentication.getPrincipal();
+        String username = (userInfo.split(AuthUtil.SEPARATOR))[0];
         String password = (String) authentication.getCredentials();
-        UserInfo user = userService.findUserByUserName(username);
+        String serviceName = (userInfo.split(AuthUtil.SEPARATOR))[1];
+        
+        UserInfo user = userService.findUserByUserNameAndServiceName(username, serviceName);
         if(user == null) throw new UsernameNotFoundException("User not found: " + username);
         
 //        if (!StringUtils.equals(password, user.getPassword())) {

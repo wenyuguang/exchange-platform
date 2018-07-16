@@ -63,9 +63,9 @@ public class LoginProcessingFilter extends AbstractAuthenticationProcessingFilte
         	//Authorization:Basic base64(账号:密码)
         	String baseHeader = request.getHeader(AuthUtil.AUTHORIZATION)
         			.replace(AuthUtil.AUTHORIZATION_BASIC_HEADER_PREFIX, "");
-        
+        	String serviceName = request.getHeader(AuthUtil.SERVICE_NAME);
         	String [] credentials = new String(Base64.decodeBase64(baseHeader),"UTF-8").split(":");
-        	username = credentials[0];
+        	username = credentials[0] + AuthUtil.SEPARATOR + serviceName;
         	password = credentials[1];
         }catch(Exception e) {
         	throw new BadCredentialsException("Basic Head information coding error");

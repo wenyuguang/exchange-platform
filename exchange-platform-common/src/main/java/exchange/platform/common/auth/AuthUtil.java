@@ -11,14 +11,19 @@ package exchange.platform.common.auth;
  */
 public class AuthUtil {
 
+	public static final String SEPARATOR                         = ":";
 	/**
 	 * 鉴权头部key信息
 	 */
-	public static final String AUTHORIZATION = "Authorization";
+	public static final String AUTHORIZATION                     = "Authorization";
+	/**
+	 * 鉴权头部Servicename信息
+	 */
+	public static final String SERVICE_NAME                      = "service";
 	/**
 	 * JWT鉴权头部value前缀
 	 */
-	public static final String AUTHORIZATION_JWT_HEADER_PREFIX = "Bearer ";
+	public static final String AUTHORIZATION_JWT_HEADER_PREFIX   = "Bearer ";
 	/**
 	 * token申请登录头部前缀
 	 */
@@ -26,5 +31,5 @@ public class AuthUtil {
 	/**
 	 * 私钥
 	 */
-	public static final String PRIVATESECRET = "PrivateSecret";
+	public static final String PRIVATESECRET                     = "PrivateSecret";
 }

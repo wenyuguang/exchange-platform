@@ -25,7 +25,7 @@ import exchange.platform.authentication.security.auth.token.SkipPathRequestMatch
 import exchange.platform.authentication.security.auth.token.TokenAuthenticationProcessingFilter;
 import exchange.platform.authentication.security.auth.token.TokenAuthenticationProvider;
 import exchange.platform.authentication.security.auth.token.extractor.TokenExtractor;
-import exchange.platform.authentication.util.RequestUtils;
+import exchange.platform.common.auth.RequestUtils;
 
 /**
  * 

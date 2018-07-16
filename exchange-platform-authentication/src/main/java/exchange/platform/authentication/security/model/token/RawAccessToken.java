@@ -43,7 +43,7 @@ public class RawAccessToken implements Token {
             return Jwts.parser().setSigningKey(signingKey).parseClaimsJws(this.token);
         } catch (UnsupportedJwtException | MalformedJwtException | IllegalArgumentException | SignatureException ex) {
             logger.error("Invalid Token", ex);
-            throw new BadCredentialsException("Invalid token: {}", ex) ;
+            throw new BadCredentialsException("Invalid token: " + ex.toString()) ;
         } catch (ExpiredJwtException expiredEx) {
             logger.info("Token is expired", expiredEx);
             throw new ExpiredTokenException(this, "Token expired {}", expiredEx) ;

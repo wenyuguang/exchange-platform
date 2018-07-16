@@ -12,6 +12,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import exchange.platform.authentication.domain.UserInfo;
 import exchange.platform.authentication.domain.UserRole;
@@ -25,9 +26,11 @@ import exchange.platform.authentication.security.model.token.TokenFactory;
 import exchange.platform.authentication.service.AuthService;
 import exchange.platform.authentication.service.UserInfoService;
 import exchange.platform.authentication.service.UserRoleService;
-import exchange.platform.authentication.util.RequestUtils;
+import exchange.platform.common.auth.RequestUtils;
 import exchange.platform.common.code.ServiceResponse;
 import exchange.platform.common.http.HttpStatus;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
 
 @Service
 public class AuthServiceImpl implements AuthService {
@@ -67,12 +70,16 @@ public class AuthServiceImpl implements AuthService {
         return tokenFactory.createAccessToken(userContext);
 	}
 
-
 	@Override
-	public boolean verify(String tokens) {
+	public boolean verify(String tokens, String serviceEnName) {
 		boolean isVerified = true;
 		try {
-			new RawAccessToken(tokens).parseClaims(tokenProperties.getSigningKey());
+			Jws<Claims> jws = new RawAccessToken(tokens).parseClaims(tokenProperties.getSigningKey());
+			String username = jws.getBody().getSubject();
+			UserInfo user = userInfoService.findUserByUserNameAndServiceName(username, serviceEnName);
+			if(StringUtils.isEmpty(user)) {
+				isVerified = false;
+			}
 		} catch (Exception e) {
 			isVerified = false;
 		}

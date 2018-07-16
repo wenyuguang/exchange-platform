@@ -28,4 +28,10 @@ public class UserInfoServiceImpl implements UserInfoService{
 		UserInfo UserInfo = userInfoMapper.findUserByUserName(username);
         return UserInfo;
     }
+
+	@Override
+	public UserInfo findUserByUserNameAndServiceName(String username, String serviceName) {
+		UserInfo UserInfo = userInfoMapper.findUserByUserNameAndServiceName(username, serviceName);
+        return UserInfo;
+	}
 }

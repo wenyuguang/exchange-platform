@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import exchange.platform.authentication.service.AuthService;
-import exchange.platform.authentication.util.RequestUtils;
+import exchange.platform.common.auth.RequestUtils;
 
 /**
  * 
@@ -53,16 +53,17 @@ public class AuthController {
     }
     /**
      * 
-     * @function "/auth/verify"
+     * @function "/verify"
      * @author Tony
-     * @creaetime 2018年7月11日21:45:54
-     * @param request
+     * @creaetime 2018年7月16日 下午5:14:37
+     * @param tokens
+     * @param serviceEnName
      * @return
      */
     @GetMapping(RequestUtils.TOKEN_VERIFY_ENTRY_POINT)
     @ResponseBody
-    public boolean verify(@RequestParam("token")String tokens) {
-    	return authService.verify(tokens);
+    public boolean verify(@RequestParam("token")String tokens, @RequestParam("serviceEnName")String serviceEnName) {
+    	return authService.verify(tokens, serviceEnName);
     }
     /**
      * 

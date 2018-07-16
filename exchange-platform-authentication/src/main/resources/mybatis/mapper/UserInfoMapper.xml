@@ -11,4 +11,11 @@
 		  from ep_service_registry
 		 where user_name = #{username}
 	</select>
+	<select id="findUserByUserNameAndServiceName" parameterType="java.util.Map" resultMap="userOutMap">
+		select user_name, user_password
+		  from ep_service_registry
+		 where user_name = #{username}
+		   and service_en_name = #{serviceName}
+	</select>
+	
 </mapper>
