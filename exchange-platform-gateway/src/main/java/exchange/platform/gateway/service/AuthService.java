@@ -33,15 +33,16 @@ public interface AuthService {
     public Object refreshToken(HttpServletRequest request);
     /**
      * 
-     * @function "/auth/verify"
+     * @function "/verify"
      * @author Tony
+     * @param serviceEnName 
      * @creaetime 2018年7月11日21:45:54
      * @param request
      * @return
      */
     @GetMapping(RequestUtils.TOKEN_VERIFY_ENTRY_POINT)
     @ResponseBody
-    public boolean verify(@RequestParam("token")String tokens);
+    public boolean verify(@RequestParam("token")String tokens, @RequestParam("serviceEnName")String serviceEnName);
     
     /**
      * 
@@ -66,7 +67,7 @@ class AuthServiceHystrix implements AuthService{
 	}
 
 	@Override
-	public boolean verify(@RequestParam("token")String tokens) {
+	public boolean verify(@RequestParam("token")String tokens, @RequestParam("serviceEnName")String serviceEnName) {
 		logger.error("verifyToken error~!!!");
 		return false;
 	}

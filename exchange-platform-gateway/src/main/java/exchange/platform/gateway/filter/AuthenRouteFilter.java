@@ -95,6 +95,7 @@ public class AuthenRouteFilter extends ZuulFilter {
 			if(authorizationHead.startsWith(AuthUtil.AUTHORIZATION_BASIC_HEADER_PREFIX)) {
 				//Basic认证模式，放过请求自行认证
 				ctx.addZuulRequestHeader(AuthUtil.AUTHORIZATION, authorizationHead);
+				ctx.addZuulRequestHeader(AuthUtil.SERVICE_NAME, serviceEnName);
 				return null;
 			}
 			//除开登录认证其余所有请求都需要经过jwt鉴权，通过才能放过请求。
@@ -106,7 +107,7 @@ public class AuthenRouteFilter extends ZuulFilter {
 					|| !serviceInfo.getAccessIp().contains(requestIp)
 					|| StringUtils.isEmpty(authorizationHead) 
 					|| !authorizationHead.startsWith(AuthUtil.AUTHORIZATION_JWT_HEADER_PREFIX)
-					|| !authService.verify(authorizationHead.replace(AuthUtil.AUTHORIZATION_JWT_HEADER_PREFIX, ""))) {
+					|| !authService.verify(authorizationHead.replace(AuthUtil.AUTHORIZATION_JWT_HEADER_PREFIX, ""), serviceEnName)) {
 				invoke = false;
 				ctx.setSendZuulResponse(false);
 				ctx.setResponseStatusCode(401);

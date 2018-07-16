@@ -28,7 +28,7 @@ public class RateLimitZuulFilter extends ZuulFilter {
 
 	private static Logger logger = LoggerFactory.getLogger(RateLimitZuulFilter.class);
 	
-	private final RateLimiter rateLimiter = RateLimiter.create(1.0);
+	private final RateLimiter rateLimiter = RateLimiter.create(9999.0);
 
 	@Override
 	public String filterType() {
