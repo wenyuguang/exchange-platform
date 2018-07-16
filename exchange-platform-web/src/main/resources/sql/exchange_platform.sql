@@ -10,10 +10,35 @@ Target Server Type    : MYSQL
 Target Server Version : 50625
 File Encoding         : 65001
 
-Date: 2018-07-09 17:57:41
+Date: 2018-07-16 17:53:07
 */
 
 SET FOREIGN_KEY_CHECKS=0;
+
+-- ----------------------------
+-- Table structure for ep_menu
+-- ----------------------------
+DROP TABLE IF EXISTS `ep_menu`;
+CREATE TABLE `ep_menu` (
+  `id` int(9) NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `span_name` varchar(255) NOT NULL COMMENT '菜单名称',
+  `a_href` varchar(255) DEFAULT NULL COMMENT '请求的方法',
+  `tier` int(3) NOT NULL COMMENT '位于菜单那一层',
+  `bz` int(3) NOT NULL COMMENT '属于哪个一级菜单',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of ep_menu
+-- ----------------------------
+INSERT INTO `ep_menu` VALUES ('1', '平台管理', 'javascript:;', '1', '1');
+INSERT INTO `ep_menu` VALUES ('2', '心跳状态监控', 'table-list.html', '2', '1');
+INSERT INTO `ep_menu` VALUES ('3', '安全管理', 'javascript:;', '1', '2');
+INSERT INTO `ep_menu` VALUES ('6', '用户创建', 'table-list.html', '2', '2');
+INSERT INTO `ep_menu` VALUES ('7', '共享交换', 'javascript:;', '1', '3');
+INSERT INTO `ep_menu` VALUES ('8', '服务目录', 'table-list.html', '2', '4');
+INSERT INTO `ep_menu` VALUES ('9', '数据管理', 'javascript:;', '1', '3');
+INSERT INTO `ep_menu` VALUES ('10', '数据资源目录', 'table-list.html', '2', '4');
 
 -- ----------------------------
 -- Table structure for ep_permission
@@ -106,14 +131,16 @@ CREATE TABLE `ep_service_registry` (
   `phone` varchar(30) NOT NULL COMMENT '联系号码',
   `create_date` datetime NOT NULL COMMENT '创建时间',
   `update_date` datetime DEFAULT NULL COMMENT '更新时间',
-  PRIMARY KEY (`id`,`service_en_name`),
-  UNIQUE KEY `index_service_en_name` (`service_en_name`) USING BTREE COMMENT '接口服务中文名字段添加索引'
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+  PRIMARY KEY (`id`,`service_en_name`,`user_name`),
+  UNIQUE KEY `index_service_en_name` (`service_en_name`) USING BTREE COMMENT '接口服务中文名字段添加索引',
+  UNIQUE KEY `index_user_name` (`user_name`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of ep_service_registry
 -- ----------------------------
-INSERT INTO `ep_service_registry` VALUES ('1', '测试', 'service_test', '服务测试', 'http', 'get', null, 'enable', 'admin', '$2a$10$dIY0XGDZcVDoZ0OE50Ufuucu9FD4EMjaUcypVLF6L/30oq9JZ7H62', '*', 'XXX公司', '张三', '123213213', '2018-07-09 17:48:45', null);
+INSERT INTO `ep_service_registry` VALUES ('1', '测试', 'service-test', '服务测试', 'http', 'get', null, 'enable', 'admin1', '$2a$10$dIY0XGDZcVDoZ0OE50Ufuucu9FD4EMjaUcypVLF6L/30oq9JZ7H62', '*', 'XXX公司', '张三', '123213213', '2018-07-09 17:48:45', null);
+INSERT INTO `ep_service_registry` VALUES ('2', '鉴权', 'service-authen', '鉴权服务', 'http', 'get，post', null, 'enable', 'admin', '$2a$10$dIY0XGDZcVDoZ0OE50Ufuucu9FD4EMjaUcypVLF6L/30oq9JZ7H62', '*', 'XXX公司', '张三', '123232131', '2018-07-13 16:54:46', null);
 
 -- ----------------------------
 -- Table structure for ep_user
